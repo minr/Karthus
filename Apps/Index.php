@@ -58,4 +58,13 @@ class Index extends Apps{
         $code   = $ret->getStatusCode();
         $error  = $ret->getErrCode();
     }
+
+    //GET HEADER
+    public function header(){
+        $request    = $this->request;
+        $headers    = $this->request->getHeader();
+        $method     = $this->request->getMethod();
+        $server     = $this->request->getServer();  //$_SERVER
+
+    }
 }

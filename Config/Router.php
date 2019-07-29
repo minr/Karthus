@@ -32,6 +32,13 @@ class Router{
             'map_var'   => [],
         ),
 
+        //GET /log
+        'get:/header'     => array(
+            'class'     => Index::class,
+            'action'    => 'header',
+            'map_var'   => [],
+        ),
+
         //POST
         'post:/'     => array(
             'class'     => Index::class,

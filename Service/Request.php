@@ -199,7 +199,7 @@ class Request{
      * @return string
      */
     public function getRequestID(): string{
-        $requestID = $this->request->header['x-request-id'] ?? $this->createRequestID();
+        $requestID = $this->request->header['x-request-id'] ?? '-';
 
         return $requestID;
     }
@@ -239,75 +239,6 @@ class Request{
         return $remoteIp;
     }
 
-
-    /**
-     * 获取akamai edgescape 信息
-     * georegion=212,country_code=TW,city=TAIPEI,lat=25.02,long=121.45,timezone=GMT+8,
-     * continent=AS,throughput=vhigh,bw=5000,asnum=24158,network_type=mobile,location_id=0
-     *
-     * @return array
-     */
-    function getEdgescape(): array{
-        $edgescape  = $this->request->header['x-akamai-edgescape'] ?? '';
-        if($edgescape === ''){
-            return array();
-        }
-
-        $__         = implode('&', explode(',', $edgescape));
-        parse_str($__);
-
-        return array(
-            'georegion'     => $georegion ?? 0,
-            'country_code'  => $country_code ?? "",
-            'city'          => $city ?? "",
-            'lat'           => $lat ?? 0,
-            'long'          => $long ?? 0,
-            'timezone'      => $timezone ?? "",
-            'continent'     => $continent ?? "",
-            'throughput'    => $throughput ?? "",
-            'bw'            => $bw ?? 0,
-            'asnum'         => $asnum ?? 0,
-            'network_type'  => $network_type ?? "",
-            'location_id'   => $location_id ?? 0,
-        );
-    }
-
-    /**
-     * 判断当前用户是否是台湾地区的用户
-     *
-     * @return bool
-     */
-    public function isTW(): bool {
-        $edgescape  = $this->getEdgescape();
-        if(empty($edgescape)){
-            return false;
-        }
-
-        $country_code   = $edgescape['country_code'] ?? '';
-
-        if($country_code !== 'TW'){
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * 是否是大陆地区
-     *
-     * @return bool
-     */
-    public function isMainland(): bool {
-        $params = $this->getParams();
-        $ip     = $params['ip'] ?? $this->getRemoteIP();
-        $iprcode= Rcode::conversion($ip);
-        if(preg_match('/^1_156/', $iprcode) && !preg_match('/^1_156_(71|81|82)/', $iprcode)){
-            return true;
-        }
-
-        return false;
-    }
-
     /***
      * 获取语言
      *
@@ -333,72 +264,6 @@ class Request{
         }else{
             (new Logger())->error('Language not match'. $lang. $this->getUserAgent());
             return "";
-        }
-    }
-
-    /***
-     * 解析UA
-     *
-     * @param string $ua
-     * @return array
-     */
-    public function httpParseUa(string $ua = ''): array{
-        $ua = trim($ua);
-        if (empty($ua)) {
-            $ua = $this->getUserAgent();
-        }
-
-        $httpUa = [
-            'device' => '',
-            'platform' => 'unknown',
-            'screen' => array(1080, 1920),
-            'version_name' => '',
-            'version_code' => '',
-            'timezone' => 'Asia/Shanghai',
-            'additions' => '',
-            'app' => 1,
-            'ibb' => 0,
-        ];
-
-        $pattern = '#^Mozilla/5\.0 \((.+)\) .*(ios|android|windowsphone|windows|mac)/([^ ]+) \(([^ ]+)\)(.*)$#i';
-
-        if (!preg_match($pattern, $ua, $match)) {
-            return $httpUa;
-        }
-
-        $_['device'] = $match[1];
-        $_['platform'] = strtolower($match[2]);
-
-        list($width, $height, $version_name, $version_code)
-            = explode('_', strrev($match[3]));
-        $_['screen'] = array($width, $height);
-        $_['version_name'] = $version_name;
-        $_['version_code'] = intval($version_code);
-        $_['timezone'] = trim($match[4]);
-        $_['additions'] = trim($match[5]);
-
-        if (preg_match('#app/([0-9]+)#', $_['additions'], $match)) {
-            $_['app'] = trim($match[1]);
-        }
-
-        if (preg_match('#ibb/([0-9\.]+)#', $_['additions'], $match)) {
-            $_['ibb'] = trim($match[1]);
-        }
-
-        return $_;
-    }
-
-    /***
-     * 手动生成Request-id
-     *
-     * @return string
-     */
-    private function createRequestID() : string{
-        if(file_exists('uuid_create')) {
-            $uuid = uuid_create();
-            return str_replace('-', '', $uuid);
-        }else{
-            return '-';
         }
     }
 }
