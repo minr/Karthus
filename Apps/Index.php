@@ -31,4 +31,31 @@ class Index extends Apps{
             'data'      => $this->params,
         ));
     }
+
+    /**
+     * 日志
+     */
+    public function log(){
+        $this->logger->success("success");
+        $this->logger->info("info");
+        $this->logger->error("error");
+        //自定义
+        $this->logger->setContent('contents')
+            ->setLevel('level')
+            ->Logger();
+    }
+
+    //HTTP
+    public function http(){
+        $http   = new \Tools\Client\Http('IP', 80);
+        //OR
+        $http   = new \Tools\Client\Http('http://www.baidu.com/', 80);
+        $ret    = $http->setMethod('GET')
+            ->setPath('/')
+            ->execute();
+
+        $body   = $ret->getBody();
+        $code   = $ret->getStatusCode();
+        $error  = $ret->getErrCode();
+    }
 }

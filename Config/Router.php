@@ -18,10 +18,17 @@ class Router{
             'map_var'   => [],
         ),
 
-        //GET /1111
-        'get:/:number'     => array(
+        //GET /log
+        'get:/log'     => array(
             'class'     => Index::class,
-            'action'    => 'execute',
+            'action'    => 'log',
+            'map_var'   => [],
+        ),
+
+        //GET /log
+        'get:/http'     => array(
+            'class'     => Index::class,
+            'action'    => 'http',
             'map_var'   => [],
         ),
 
@@ -31,6 +38,8 @@ class Router{
             'action'    => 'post',
             'map_var'   => [],
         ),
+
+
     ];
 
 }

@@ -26,7 +26,7 @@ abstract class Core{
     private $pidFile = null;
     private $method  = 'GET';
     private $pathinfo= '/';
-    private $is_json = false;
+    private $is_json = true;
     private $httpContentType = 'application/json';
     protected $jobs  = null;
     /**
@@ -139,7 +139,7 @@ abstract class Core{
      * @param bool $return_json
      * @return Core
      */
-    public function responseJSON(bool $return_json = false): Core{
+    public function responseJSON(bool $return_json = true): Core{
         $this->is_json  = !!$return_json;
         if($this->is_json === true){
             $this->httpContentType = 'application/json';
