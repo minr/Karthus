@@ -36,11 +36,11 @@ spl_autoload_register(function($name){
 });
 
 try {
-    $service = new Service\Pandora('http://0.0.0.0:8000');
+    $service = new Service\Karthus('http://0.0.0.0:8000');
     $service
         ->setRouter(Config\Router::$Routers)
         ->setLogFile(LOGGER_PATH . '/http.log')
-        ->setLogLevel(Service\Pandora::LEVER_DEBUG)
+        ->setLogLevel(Service\Karthus::LEVER_DEBUG)
         ->setProcessName(APP_NAME)
         ->setCompression(true)
         ->setPidFile()

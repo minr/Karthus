@@ -2,11 +2,11 @@
 namespace Service;
 
 /**
- * Class Pandora
+ * Class Karthus
  *
  * @package Service
  */
-class Pandora extends Core{
+class Karthus extends Core{
     private $router = [];
 
     /**
@@ -49,7 +49,7 @@ class Pandora extends Core{
         //开始遍历
         $routers = $this->getRouter();
         foreach ($routers as $pattern => $handlerName) {
-            $pattern = strtr($pattern, \Service\Pandora::$tokens);
+            $pattern = strtr($pattern, \Service\Karthus::$tokens);
             if (!preg_match("#^$pattern$#is", $_path, $matches)) {
                 continue;
             }
