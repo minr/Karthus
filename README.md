@@ -8,7 +8,7 @@ A simple Framework For Swoole
 
 ```php 
 try {
-    $service = new Service\Pandora('http://0.0.0.0:8000');   //设置服务的IP和端口
+    $service = new Service\Karthus('http://0.0.0.0:8000');   //设置服务的IP和端口
     $service
         ->setRouter(Config\Router::$Routers) //载入路由
         ->setLogFile(LOGGER_PATH . '/http.log') //设置日志路径
