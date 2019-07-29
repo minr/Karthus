@@ -11,7 +11,7 @@ if(version_compare(PHP_VERSION, '7.1', '<')){
 }
 
 const EXTENSIONS  = ['swoole'];
-const APP_NAME    = 'pandora';
+const APP_NAME    = 'Karthus';
 const LOGGER_PATH = '/data/logs/'. APP_NAME;
 const LOGGER_DIR  = LOGGER_PATH .'/logs';
 const __ROOT__    = __DIR__;
