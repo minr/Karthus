@@ -9,28 +9,9 @@ use Tools\Logger;
  * @package Service
  */
 abstract class Apps implements AppsBasic {
-    public const ALLOWED_MODIFIED_FIELD = [
-        'name',
-        'birthday',
-        'height',
-        'weight',
-        'longitude',
-        'latitude',
-        'avatar',
-        'description',
-        'city_settled',
-        'hometown',
-        'role',
-        'blood_type',
-        'mate',
-        'ethnicity',
-        'passwd',
-        'email',
-        'payment_salt',
-        'payment_code',
-        'payment_salt_oversea',
-        'payment_code_oversea',
-    ];
+    /**
+     * @var array 参数
+     */
     protected $params = [];
 
     /**
@@ -58,15 +39,6 @@ abstract class Apps implements AppsBasic {
         $this->api          = new Api($this->request);
         $this->params       = $this->request->getParams();
         $this->body         = $this->request->getBody();
-
-        //为了安全，我先来统一处理page和size参数
-        //页数及每页条数
-        $this->params['page'] = $this->params['page'] ?? 1;
-        $this->params['size'] = $this->params['size'] ?? 100;
-        $this->params['page'] = $this->params['page'] < 0 || $this->params['page'] >= 1000
-                                    ? 1 : $this->params['page'];
-        $this->params['size'] = $this->params['size'] < 0 || $this->params['size'] >= 100
-                                    ? 100 : $this->params['size'];
     }
 
     /***

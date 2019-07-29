@@ -9,12 +9,6 @@ use Swoole\Server;
  * @package Service
  */
 abstract class Core{
-    public const DECODE_PHP            = 1;   //使用PHP的serialize打包
-    public const DECODE_JSON           = 2;   //使用json_encode打包
-    public const DECODE_MSGPACK        = 3;   //使用msgpack打包
-    public const DECODE_SWOOLE         = 4;   //使用swoole_serialize打包
-    public const DECODE_GZIP           = 128; //启用GZIP压缩
-
     public const LEVER_DEBUG     = 0;
     public const LEVER_TRACE     = 1;
     public const LEVER_INFO      = 2;
@@ -26,14 +20,15 @@ abstract class Core{
      * @var \Swoole\Http\Server
      */
     private $server = null;
-    private $host = '';
-    private $port = 8000;
+    private $host   = '';
+    private $port   = 8000;
     private $processName = '-';
     private $pidFile = null;
     private $method  = 'GET';
     private $pathinfo= '/';
-    private $httpContentType = 'json';
-    protected $jobs   = null;
+    private $is_json = false;
+    private $httpContentType = 'application/json';
+    protected $jobs  = null;
     /**
      * @var \Service\Request
      */
@@ -135,6 +130,22 @@ abstract class Core{
      */
     public function setWorkerNum(int $workerNum = 2): Core{
         $this->settings['worker_num'] = intval($workerNum);
+        return $this;
+    }
+
+    /**
+     * 是否返回JSON数据
+     *
+     * @param bool $return_json
+     * @return Core
+     */
+    public function responseJSON(bool $return_json = false): Core{
+        $this->is_json  = !!$return_json;
+        if($this->is_json === true){
+            $this->httpContentType = 'application/json';
+        }else{
+            $this->httpContentType = 'text/html';
+        }
         return $this;
     }
 
@@ -317,17 +328,7 @@ abstract class Core{
         $this->method   = $this->request->getMethod();
         $this->pathinfo = $this->request->getPathInfo();
 
-        //解析客户端发来的数据
-        $rawContent = trim($this->request->getBody());
-        $__         = json_decode($rawContent, true);
-
-        $params     = $this->request->getParams();
-
-        $this->pathinfo   = preg_replace_callback('/\.(json)/', function($match){
-            $this->httpContentType = strval($match[1]);
-            return '';
-        }, $this->pathinfo);
-
+        //这两个特殊的请求头我不要了
         if($this->pathinfo === '/favicon.ico' || $this->pathinfo === ''){
             $this->httpResponse(HttpCode::API_CODE_NOT_FOUND, array(
                 'code'      => HttpCode::API_CODE_NOT_FOUND,
@@ -359,18 +360,17 @@ abstract class Core{
     public function httpResponse(int $code, array $data){
         $code   = intval($code);
         $code   = $code === 0 || $code === 204 ? 200 : $code;
-        if($this->httpContentType === 'json'){
-            $content_type = 'application/json';
-        }else{
-            $content_type = 'text/html';
-        }
 
-        $this->responses->header('content-type', $content_type);
+        $this->responses->header('content-type', $this->httpContentType);
         $this->responses->status($code);
 
-        $data['message']    = HttpCode::$ErrorCode[$data['code']] ?? '';
-        $json   = json_encode($data);
-        $this->responses->end($json);
+        if($this->is_json === true){
+            $data['message']    = HttpCode::$ErrorCode[$data['code']] ?? '';
+            $contents   = json_encode($data);
+        }else{
+            $contents   = $data['message'] ?? 'No Msg For U';
+        }
+        $this->responses->end($contents);
     }
 
     /**

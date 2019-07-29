@@ -3,18 +3,14 @@
 if(PHP_SAPI !== 'cli'){
     exit("ONLY CLI\n");
 }
+date_default_timezone_set('Asia/Shanghai');
 
 //查看php版本号
 if(version_compare(PHP_VERSION, '7.1', '<')){
     exit("PHP VERSION < 7.1+");
 }
-/**
- * 默认时区定义
- */
-date_default_timezone_set('Asia/Shanghai');
 
-
-const EXTENSIONS  = ['swoole', 'redis', 'jwt', 'yaconf'];
+const EXTENSIONS  = ['swoole'];
 const APP_NAME    = 'pandora';
 const LOGGER_PATH = '/data/logs/'. APP_NAME;
 const LOGGER_DIR  = LOGGER_PATH .'/logs';
@@ -49,6 +45,7 @@ try {
         ->setCompression(true)
         ->setPidFile()
         ->setWorkerNum(16)
+        ->responseJSON(true)
         ->run();
 }catch (Exception $exception){
     (new Tools\Logger())->error("{$exception->getMessage()}");
