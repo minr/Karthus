@@ -83,10 +83,6 @@ class Karthus extends Core{
             }
         }
 
-        //取出鉴权头
-        $this->request->setParams([
-            'me'    => $this->request->getRemoteUserID(),
-        ]);
         $this->request->setParams($matches_data);
 
         $targetModel    = $handlerName['class'];

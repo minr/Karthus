@@ -243,7 +243,7 @@ abstract class Core{
      */
     public function start(\Swoole\Server $server){
         echo 'Date:' . date('Y-m-d H:i:s') ,
-            "\t Swoole\Http\Server master worker start\n";
+            "\t {$this->processName} master worker start\n";
         @swoole_set_process_name($server->setting['process_name'] . '-master');
         //记录进程id,脚本实现自动重启
         $pid = $server->master_pid;
@@ -266,7 +266,7 @@ abstract class Core{
     public function workerError(\Swoole\Server $server, $worker_id,
                                  $worker_pid, $exit_code){
         echo 'Date:' . date('Y-m-d H:i:s') ,
-        "\t Swoole\Http\Server has error $worker_id#$worker_pid $exit_code\n";
+        "\t {$this->processName} has error $worker_id#$worker_pid $exit_code\n";
     }
 
     /***
@@ -275,7 +275,7 @@ abstract class Core{
     public function shutdown(\Swoole\Server $server){
         unlink($this->pidFile);
         echo 'Date:' . date('Y-m-d H:i:s') ,
-                "\t Swoole\Http\Server shutdown\n";
+                "\t {$this->processName} shutdown\n";
     }
 
     /***
@@ -284,7 +284,7 @@ abstract class Core{
      */
     public function workerStop(\Swoole\Server $server, $workerId){
         $date = date('Y-m-d H:i:s');
-        echo "Date:{$date} \t Swoole\Http\Server worker:{$workerId} shutdown\n";
+        echo "Date:{$date} \t {$this->processName} worker:{$workerId} shutdown\n";
     }
 
     /***
@@ -294,10 +294,10 @@ abstract class Core{
     public function workerStart(\Swoole\Server $server, $workerID){
         //判断worker
         if($workerID >= $server->setting['worker_num']) {
-            echo 'Date:' . date('Y-m-d H:i:s') . "\t Swoole\Http\Server task-worker start\n";
+            echo 'Date:' . date('Y-m-d H:i:s') . "\t {$this->processName} task-worker start\n";
             @swoole_set_process_name("{$this->processName}-task");
         } else {
-            echo 'Date:' . date('Y-m-d H:i:s') . "\t Swoole\Http\Server worker start\n";
+            echo 'Date:' . date('Y-m-d H:i:s') . "\t {$this->processName} worker start\n";
             @swoole_set_process_name("{$this->processName}-worker");
         }
     }
@@ -307,7 +307,7 @@ abstract class Core{
      */
     public function managerStart(\Swoole\Server $server){
         echo 'Date:' . date('Y-m-d H:i:s') ,
-            "\t Swoole\Http\Server manager worker start\n";
+            "\t {$this->processName} manager worker start\n";
         @swoole_set_process_name($server->setting['process_name'] . '-manager');
     }
 
@@ -315,7 +315,7 @@ abstract class Core{
      * @param Server $server
      */
     public function managerStop(\Swoole\Server $server){
-        echo 'Date:' . date('Y-m-d H:i:s') . "\t Swoole\Http\Server manager worker stop\n";
+        echo 'Date:' . date('Y-m-d H:i:s') . "\t {$this->processName} manager worker stop\n";
     }
 
     /***

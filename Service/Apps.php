@@ -19,11 +19,6 @@ abstract class Apps implements AppsBasic {
      */
     protected $logger = null;
 
-    /***
-     * @var Api
-     */
-    protected $api    = null;
-
     /**
      * @var \Service\Request
      */
@@ -36,7 +31,6 @@ abstract class Apps implements AppsBasic {
     public function init() {
         $this->request      = Request::initRequest();
         $this->logger       = new Logger($this->request);
-        $this->api          = new Api($this->request);
         $this->params       = $this->request->getParams();
         $this->body         = $this->request->getBody();
     }
