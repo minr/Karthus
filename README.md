@@ -12,7 +12,7 @@ try {
     $service
         ->setRouter(Config\Router::$Routers) //载入路由
         ->setLogFile(LOGGER_PATH . '/http.log') //设置日志路径
-        ->setLogLevel(Service\Pandora::LEVER_DEBUG) //设置日志等级
+        ->setLogLevel(Service\Karthus::LEVER_DEBUG) //设置日志等级
         ->setProcessName(APP_NAME) //服务名
         ->setCompression(true) //启用HTTP压缩输出
         ->setPidFile() //设置PID文件

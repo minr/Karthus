@@ -55,6 +55,9 @@ abstract class Apps implements AppsBasic {
         ];
     }
 
+    public function packagingHttpContent(int $code = 200, string $contents = ''): array{
+
+    }
 
     /**
      * 鉴权
