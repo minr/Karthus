@@ -28,7 +28,10 @@ class Index extends Apps{
         return $this->packagingHttpResponse(HttpCode::API_CODE_OK, '', array(
             'code'      => HttpCode::API_CODE_OK,
             'message'   => '',
-            'data'      => $this->params,
+            'data'      => [
+                $this->params,
+                $this->request->getBody(),
+            ],
         ));
     }
 

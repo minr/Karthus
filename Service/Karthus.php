@@ -43,6 +43,7 @@ class Karthus extends Core{
                 'code'      => HttpCode::API_CODE_NOT_FOUND,
                 'message'   => 'Api Not Found',
             ));
+            return;
         }
         $_path  = "$method:$path";
 
@@ -62,6 +63,7 @@ class Karthus extends Core{
                 'code'      => HttpCode::API_CODE_NOT_FOUND,
                 'message'   => 'Api Not Found',
             ));
+            return;
         }
 
         if(!isset($handlerName['class'])){
@@ -69,6 +71,7 @@ class Karthus extends Core{
                 'code'      => HttpCode::API_CODE_NOT_FOUND,
                 'message'   => 'Api Not Found',
             ));
+            return;
         }
 
         $matches_data   = [];
@@ -91,6 +94,7 @@ class Karthus extends Core{
                 'code'      => HttpCode::API_CODE_NOT_FOUND,
                 'message'   => "Class[$targetModel] Not found",
             ));
+            return;
         }
 
         $targetClass    = new $targetModel();
@@ -112,6 +116,7 @@ class Karthus extends Core{
                 'code'      => HttpCode::API_CODE_NOT_FOUND,
                 'message'   => "Class[$targetModel] Action[$method_action] Not found",
             ));
+            return;
         }
 
         $sendData = call_user_func_array(array($targetClass, $method_action), []);
@@ -126,6 +131,7 @@ class Karthus extends Core{
                 'code'      => HttpCode::API_CODE_INTERNAL_SERVER_ERROR,
                 'message'   => 'sendData Empty',
             ));
+            return;
         }
 
         $this->httpResponse($sendData['code'], $sendData);
