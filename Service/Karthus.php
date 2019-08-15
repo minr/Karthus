@@ -49,6 +49,7 @@ class Karthus extends Core{
 
         //开始遍历
         $routers = $this->getRouter();
+        $matched = false;
         foreach ($routers as $pattern => $handlerName) {
             $pattern = strtr($pattern, \Service\Karthus::$tokens);
             if (!preg_match("#^$pattern$#is", $_path, $matches)) {
