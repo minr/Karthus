@@ -1,7 +1,6 @@
 <?php
 namespace Service;
 
-use Tools\IP\Rcode;
 use Tools\Logger;
 
 /**

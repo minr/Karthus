@@ -1,12 +1,14 @@
 <?php
 namespace Tools\Client;
 
+use Service\Tools;
+
 /**
  * Class Http
  *
  * @package Tools\Client
  */
-class Http{
+class Http extends Tools {
     private $client = null;
     private $path   = '/';
     private $timeout= 0.5;

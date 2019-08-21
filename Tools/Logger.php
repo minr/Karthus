@@ -1,26 +1,17 @@
 <?php
 namespace Tools;
 
-use \Service\Request;
+use Service\Tools;
 
 /**
  * Class Logger
  *
  * @package Tools
  */
-class Logger{
+class Logger extends Tools {
     private $dir = LOGGER_DIR;
     private $msg = '';
     private $level = 'info';
-
-    /**
-     * @var \Service\Request
-     */
-    private $request = null;
-
-    public function __construct(\Service\Request $request = null) {
-        $this->request = is_null($request) ? Request::initRequest() : $request;
-    }
 
     /***
      * 设置日志内容
@@ -107,9 +98,9 @@ class Logger{
         $date   = date('Ymd');
         //参数处理
         $msg    = $this->msg;
-        $time   = strftime('[%d/%h/%Y:%H:%M:%S %z]', $this->request->getRequestTime());
-        $id     = strval($this->request->getRequestID());
-        $msg    = "{$this->request->getRemoteIP()} {$this->request->getRemoteUserID()} {$id} {$time} \"{$this->request->getMethod()} {$this->request->getPathInfo()} $msg\"\n";
+        $time   = strftime('[%d/%h/%Y:%H:%M:%S %z]', $this->getRequest()->getRequestTime());
+        $id     = strval($this->getRequest()->getRequestID());
+        $msg    = "{$this->getRequest()->getRemoteIP()} {$this->getRequest()->getRemoteUserID()} {$id} {$time} \"{$this->getRequest()->getMethod()} {$this->getRequest()->getPathInfo()} $msg\"\n";
 
         $file   = "{$this->dir}/{$this->level}.log.{$date}";
         @file_put_contents($file, $msg, FILE_APPEND | LOCK_EX);
