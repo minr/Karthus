@@ -38,6 +38,10 @@ abstract class Core{
      * @var \Swoole\Http\Response
      */
     public $responses;
+    /***
+     * @var Http\Router\Router
+     */
+    protected $R    = null;
 
     /**
      * 默认配置
@@ -76,6 +80,7 @@ abstract class Core{
         $this->host     = strval($ps['host']);
         $this->port     = intval($ps['port']);
         $this->settings = $settings ? array_merge($this->settings, $settings) : $this->settings;
+        $this->R        = new Http\Router\Router();
     }
 
     /***
@@ -204,7 +209,7 @@ abstract class Core{
             case 'status':
                 break;
             case 'stop':
-                $pid    = file_get_contents($this->pidFile);
+                $pid    = @file_get_contents($this->pidFile);
                 if($pid && \Swoole\Process::kill($pid, 0)){
                     \Swoole\Process::kill($pid, SIGTERM);
 

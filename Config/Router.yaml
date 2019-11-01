@@ -1,0 +1,7 @@
+routes:
+  /index/(\d+)/(\d+):
+    class: someClass.indexAction,
+    allowed_method: GET,
+    params:
+      - id
+      - xid

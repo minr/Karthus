@@ -1,28 +1,30 @@
 <?php
 namespace Service;
 
+use Service\Http\Message\StatusCodeInterface;
+
 /**
  * Http错误代码 class
  * Class HttpCode
  *
  * @package Service
  */
-class HttpCode{
+class HttpCode implements StatusCodeInterface  {
 
-    const API_CODE_OK           = 200;
-    const API_CODE_CREATED      = 201;
-    const API_CODE_NO_CONTENT   = 204;
-    const API_CODE_BAD_REQUEST  = 400;
-    const API_CODE_UNAUTHORIZED = 401;
-    const API_CODE_PAYMENT_REQUIRED = 402;
-    const API_CODE_FORBIDDEN    = 403;
-    const API_CODE_NOT_FOUND    = 404;
-    const API_CODE_METHOD_NOT_ALLOWED   = 405;
-    const API_CODE_GONE         = 410;
-    const API_CODE_UNSUPPORTED_MEDIA_TYPE   = 415;
-    const API_CODE_UNPROCESSABLE_ENTITY = 422;
-    const API_CODE_TOO_MANY_REQUESTS    = 429;
-    const API_CODE_INTERNAL_SERVER_ERROR    = 500;
+    public const API_CODE_OK           = self::STATUS_OK;
+    public const API_CODE_CREATED      = self::STATUS_CREATED;
+    public const API_CODE_NO_CONTENT   = self::STATUS_NO_CONTENT;
+    public const API_CODE_BAD_REQUEST  = self::STATUS_BAD_REQUEST;
+    public const API_CODE_UNAUTHORIZED = self::STATUS_UNAUTHORIZED;
+    public const API_CODE_PAYMENT_REQUIRED = self::STATUS_PAYMENT_REQUIRED;
+    public const API_CODE_FORBIDDEN    = self::STATUS_FORBIDDEN;
+    public const API_CODE_NOT_FOUND    = self::STATUS_NOT_FOUND;
+    public const API_CODE_METHOD_NOT_ALLOWED   = self::STATUS_METHOD_NOT_ALLOWED;
+    public const API_CODE_GONE         = self::STATUS_GONE;
+    public const API_CODE_UNSUPPORTED_MEDIA_TYPE   = self::STATUS_UNSUPPORTED_MEDIA_TYPE;
+    public const API_CODE_UNPROCESSABLE_ENTITY = self::STATUS_UNPROCESSABLE_ENTITY;
+    public const API_CODE_TOO_MANY_REQUESTS    = self::STATUS_TOO_MANY_REQUESTS;
+    public const API_CODE_INTERNAL_SERVER_ERROR    = self::STATUS_INTERNAL_SERVER_ERROR;
 
     public static $ErrorCode    = [
         200 => '操作成功',

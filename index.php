@@ -36,13 +36,14 @@ spl_autoload_register(function($name){
 });
 
 try {
+    $routers = yaml_parse_file(__DIR__ .'/Config/Router.yaml');
     $service = new Service\Karthus('http://0.0.0.0:8000');
     $service
-        ->setRouter(Config\Router::$Routers)
+        ->setRouter($routers)
         ->setLogFile(LOGGER_PATH . '/http.log')
         ->setLogLevel(Service\Karthus::LEVER_DEBUG)
         ->setProcessName(APP_NAME)
-        ->setCompression(true)
+        ->setCompression(false)
         ->setPidFile()
         ->setWorkerNum(16)
         ->responseJSON(true)

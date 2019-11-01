@@ -1,6 +1,9 @@
 <?php
 namespace Service;
 
+use Service\Http\Message\RequestMethodInterface;
+use Service\Http\Router\Router;
+
 /**
  * Class Karthus
  *
@@ -27,7 +30,23 @@ class Karthus extends Core{
      * @return Core
      */
     public function setRouter(array $router): Core{
-        $this->router = $router;
+        $routes = $router['routes'] ?? [];
+        if(empty($routes)){
+            echo "Set Routers !!!\n";
+            exit();
+        }
+        foreach ($routes as $pattern => $route){
+            $pattern      = strtr($pattern, \Service\Karthus::$tokens);
+            $routerMethod = $router['allowed_method'] ?? RequestMethodInterface::METHOD_GET;
+            $routerParams = $router['params'] ?? '';
+            $routerClass  = $router['class'] ?? '';
+
+            if($routerClass === ''){
+                continue;
+            }
+
+            $this->R->$$routerMethod($pattern, $routerClass, $routerParams);
+        }
         return $this;
     }
 
@@ -45,19 +64,44 @@ class Karthus extends Core{
             ));
             return;
         }
+        //进行匹配
+        $match  = $this->R->find($method, $path);
+        if(empty($match)){
+            $this->httpResponse(HttpCode::API_CODE_NOT_FOUND, array(
+                'code'      => HttpCode::API_CODE_NOT_FOUND,
+                'message'   => 'Api Not Found',
+            ));
+            return;
+        }
+
+
         $_path  = "$method:$path";
 
         //开始遍历
-        $routers = $this->getRouter();
+        $routers = $this->router['routes'] ?? [];
+        if(empty($routers)){
+            $this->httpResponse(HttpCode::API_CODE_NOT_FOUND, array(
+                'code'      => HttpCode::API_CODE_NOT_FOUND,
+                'message'   => 'Api Not Found',
+            ));
+            return;
+        }
+
+        $R     = new Router($this->request);
         $matched = false;
-        foreach ($routers as $pattern => $handlerName) {
-            $pattern = strtr($pattern, \Service\Karthus::$tokens);
-            if (!preg_match("#^$pattern$#is", $_path, $matches)) {
+        foreach ($routers as $pattern => $router) {
+            $pattern      = strtr($pattern, \Service\Karthus::$tokens);
+            $routerMethod = $router['allowed_method'] ?? RequestMethodInterface::METHOD_GET;
+            $routerParams = $router['params'] ?? '';
+            $routerClass  = $router['class'] ?? '';
+
+            if($routerClass === ''){
                 continue;
             }
-            $matched = true;
-            break;
+
+            $R->$$routerMethod($pattern, $routerClass);
         }
+        $R->run();
 
         if ($matched === false) {
             $this->httpResponse(HttpCode::API_CODE_NOT_FOUND, array(
